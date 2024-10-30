@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { Repository } from 'typeorm';
@@ -13,24 +13,43 @@ export class QuestionsService {
     private readonly questionsRepository: Repository<Question>,
     private readonly userService: UsersService,
   ) {}
-  create(createQuestionDto: CreateQuestionDto) {
-    // const user = this.userService.findOne(createQuestionDto.user_id);
-    return this.questionsRepository.save({ ...createQuestionDto, user: {} });
+  async create(createQuestionDto: CreateQuestionDto) {
+    const user = await this.userService.findOneById(createQuestionDto.userId);
+    if (!user) {
+      throw new HttpException('User not found', 400);
+    }
+    const question = await this.questionsRepository.findOne({
+      where: { title: createQuestionDto.title },
+    });
+    if (question) {
+      throw new HttpException('Question already exists', 400);
+    }
+    return this.questionsRepository.save({ ...createQuestionDto, user: user });
   }
 
   findAll() {
-    return `This action returns all questions`;
+    return this.questionsRepository.find({ relations: { user: true } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} question`;
+  findOneById(id: number) {
+    return this, this.questionsRepository.findOne({ where: { id: id } });
   }
 
-  update(id: number, updateQuestionDto: UpdateQuestionDto) {
-    return `This action updates a #${id} question`;
+  async update(id: number, updateQuestionDto: UpdateQuestionDto) {
+    const question = await this.questionsRepository.findOne({
+      where: { title: updateQuestionDto.title },
+    });
+    if (question) {
+      throw new HttpException('Question already exists', 400);
+    }
+
+    return this.questionsRepository.update(
+      { id: id },
+      { ...updateQuestionDto },
+    );
   }
 
   remove(id: number) {
-    return `This action removes a #${id} question`;
+    return this.questionsRepository.delete({ id: id });
   }
 }

@@ -1,5 +1,4 @@
-import { IsString, MinLength } from 'class-validator';
-import { User } from 'src/users/entities/user.entity';
+import { IsNumber, IsString, MinLength } from 'class-validator';
 
 export class CreateQuestionDto {
   @MinLength(5)
@@ -10,5 +9,5 @@ export class CreateQuestionDto {
   @IsString()
   description: string;
 
-  user: User;
+  userId: number;
 }

@@ -20,9 +20,12 @@ export class QuestionsController {
 
   @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createQuestionDto: CreateQuestionDto, @Request() req: any) {
-    console.log(req.user);
-    // return this.questionsService.create(createQuestionDto);
+  async create(
+    @Body() createQuestionDto: CreateQuestionDto,
+    @Request() req: any,
+  ) {
+    createQuestionDto.userId = req?.user?.sub;
+    return this.questionsService.create(createQuestionDto);
   }
 
   @Get()
@@ -32,9 +35,10 @@ export class QuestionsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.questionsService.findOne(+id);
+    return this.questionsService.findOneById(+id);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -43,6 +47,7 @@ export class QuestionsController {
     return this.questionsService.update(+id, updateQuestionDto);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.questionsService.remove(+id);
