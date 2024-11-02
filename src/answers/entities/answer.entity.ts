@@ -1,4 +1,4 @@
-import { Answer } from 'src/answers/entities/answer.entity';
+import { Question } from 'src/questions/entities/question.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -6,32 +6,29 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class Question {
+export class Answer {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column({ unique: true })
-  title: string;
 
   @Column()
   description: string;
 
-  @ManyToOne(() => User, (user) => user.questions)
+  @ManyToOne(() => User, (user) => user.answers)
   @JoinColumn()
   user: User;
 
-  @OneToMany(() => Answer, (answer) => answer.question)
-  answers: Answer[];
+  @ManyToOne(() => Question, (question) => question.answers)
+  @JoinColumn()
+  question: Question;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 }

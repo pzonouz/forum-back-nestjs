@@ -14,6 +14,7 @@ import { QuestionsModule } from './questions/questions.module';
 import { CoreModule } from './core/core.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { ToLowerCaseMiddleware } from './middlewares/toLowerCase.middleware';
+import { AnswersModule } from './answers/answers.module';
 
 @Module({
   imports: [
@@ -32,8 +33,9 @@ import { ToLowerCaseMiddleware } from './middlewares/toLowerCase.middleware';
       }),
     }),
     UsersModule,
-    QuestionsModule,
     CoreModule,
+    QuestionsModule,
+    AnswersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

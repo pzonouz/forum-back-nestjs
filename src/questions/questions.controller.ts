@@ -24,7 +24,7 @@ export class QuestionsController {
     @Body() createQuestionDto: CreateQuestionDto,
     @Request() req: any,
   ) {
-    createQuestionDto.userId = req?.user?.sub;
+    createQuestionDto.userId = req?.user?.id;
     return this.questionsService.create(createQuestionDto);
   }
 
@@ -35,7 +35,7 @@ export class QuestionsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.questionsService.findOneById(+id);
+    return this.questionsService.findOneById(id);
   }
 
   @UseGuards(AuthGuard)
@@ -44,12 +44,12 @@ export class QuestionsController {
     @Param('id') id: string,
     @Body() updateQuestionDto: UpdateQuestionDto,
   ) {
-    return this.questionsService.update(+id, updateQuestionDto);
+    return this.questionsService.update(id, updateQuestionDto);
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.questionsService.remove(+id);
+    return this.questionsService.remove(id);
   }
 }

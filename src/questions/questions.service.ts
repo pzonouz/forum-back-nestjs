@@ -31,11 +31,18 @@ export class QuestionsService {
     return this.questionsRepository.find({ relations: { user: true } });
   }
 
-  findOneById(id: number) {
-    return this, this.questionsRepository.findOne({ where: { id: id } });
+  async findOneById(id: string) {
+    const question = await this.questionsRepository.findOne({
+      where: { id: id },
+      relations: { user: true },
+    });
+    if (question) {
+      return question;
+    }
+    throw new HttpException('Question Not Found', 404);
   }
 
-  async update(id: number, updateQuestionDto: UpdateQuestionDto) {
+  async update(id: string, updateQuestionDto: UpdateQuestionDto) {
     const question = await this.questionsRepository.findOne({
       where: { title: updateQuestionDto.title },
     });
@@ -49,7 +56,7 @@ export class QuestionsService {
     );
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.questionsRepository.delete({ id: id });
   }
 }

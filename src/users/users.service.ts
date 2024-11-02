@@ -23,18 +23,18 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOneById(id: number) {
+  findOneById(id: string) {
     return this.userRepository.findOne({ where: { id: id } });
   }
   findOneEmail(email: string) {
     return this.userRepository.findOne({ where: { email: email } });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} user`;
   }
 }
