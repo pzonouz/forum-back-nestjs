@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, UseGuards } from '@nestjs/common';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
 import { QuestionsService } from 'src/questions/questions.service';
@@ -6,6 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Answer } from './entities/answer.entity';
 import { UsersService } from 'src/users/users.service';
+import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AnswersService {
@@ -35,18 +37,48 @@ export class AnswersService {
   }
 
   findAllByQuestionId(id: string) {
-    return this.answerRespository.find({ where: { question: { id: id } } });
+    return this.answerRespository.find({
+      where: { question: { id: id } },
+      relations: { user: true, question: { user: true } },
+    });
   }
 
   findOneById(id: string) {
-    return this.answerRespository.findOne({ where: { id: id } });
+    return this.answerRespository.findOne({
+      where: { id: id },
+      relations: { question: { user: true } },
+    });
   }
 
-  update(id: number, updateAnswerDto: UpdateAnswerDto) {
-    return this.answerRespository.update(id, updateAnswerDto);
+  async update(
+    id: string,
+    updateAnswerDto: UpdateAnswerDto,
+    requestUser: User,
+  ) {
+    const answer = await this.answerRespository.findOne({
+      where: { id: id },
+      relations: { user: true, question: { user: true } },
+    });
+    if (!answer) {
+      throw new HttpException('Answer does not exists', 404);
+    }
+    if (answer.question.user?.id !== requestUser?.id) {
+      throw new HttpException('Only Owener can edit answer', 401);
+    }
+    return await this.answerRespository.update(id, updateAnswerDto);
   }
 
-  remove(id: number) {
+  async remove(id: string, requestUser: User) {
+    const answer = await this.answerRespository.findOne({
+      where: { id: id },
+    });
+    if (!answer) {
+      throw new HttpException('Answer does not exists', 404);
+    }
+    if (answer.user.id !== requestUser.id) {
+      throw new HttpException('Only Owener can edit answer', 401);
+    }
+
     return this.answerRespository.delete(id);
   }
 }

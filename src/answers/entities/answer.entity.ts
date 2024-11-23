@@ -18,11 +18,16 @@ export class Answer {
   @Column()
   description: string;
 
+  @Column({ default: false })
+  solving: boolean;
+
   @ManyToOne(() => User, (user) => user.answers)
   @JoinColumn()
   user: User;
 
-  @ManyToOne(() => Question, (question) => question.answers)
+  @ManyToOne(() => Question, (question) => question.answers, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   question: Question;
 

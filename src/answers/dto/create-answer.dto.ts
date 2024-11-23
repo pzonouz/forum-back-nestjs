@@ -1,4 +1,4 @@
-import { IsNumber, IsString, MinLength } from 'class-validator';
+import { IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateAnswerDto {
   @IsString()
@@ -7,6 +7,9 @@ export class CreateAnswerDto {
 
   @IsString()
   questionId: string;
+
+  @IsOptional()
+  solving: boolean;
 
   userId: string;
 }

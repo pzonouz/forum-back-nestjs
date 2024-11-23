@@ -22,6 +22,9 @@ export class Question {
   @Column()
   description: string;
 
+  @Column({ default: false })
+  solved: boolean;
+
   @ManyToOne(() => User, (user) => user.questions)
   @JoinColumn()
   user: User;
@@ -30,8 +33,8 @@ export class Question {
   answers: Answer[];
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 }

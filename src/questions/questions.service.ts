@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Question } from './entities/question.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class QuestionsService {
@@ -28,7 +29,9 @@ export class QuestionsService {
   }
 
   findAll() {
-    return this.questionsRepository.find({ relations: { user: true } });
+    return this.questionsRepository.find({
+      relations: { user: true, answers: true },
+    });
   }
 
   async findOneById(id: string) {
@@ -42,12 +45,20 @@ export class QuestionsService {
     throw new HttpException('Question Not Found', 404);
   }
 
-  async update(id: string, updateQuestionDto: UpdateQuestionDto) {
+  async update(
+    id: string,
+    updateQuestionDto: UpdateQuestionDto,
+    requestUser: User,
+  ) {
     const question = await this.questionsRepository.findOne({
-      where: { title: updateQuestionDto.title },
+      where: { id: id },
+      relations: { user: true },
     });
-    if (question) {
-      throw new HttpException('Question already exists', 400);
+    if (!question) {
+      throw new HttpException('Question does not exists', 404);
+    }
+    if (question.user?.id !== requestUser?.id) {
+      throw new HttpException('Only Owener can edit question', 401);
     }
 
     return this.questionsRepository.update(
@@ -56,7 +67,14 @@ export class QuestionsService {
     );
   }
 
-  remove(id: string) {
+  async remove(id: string, requestUser: User) {
+    const question = await this.findOneById(id);
+    if (!question) {
+      throw new HttpException('Question does not exists', 404);
+    }
+    if (question.user.id !== requestUser.id) {
+      throw new HttpException('Only Owener can edit question', 401);
+    }
     return this.questionsRepository.delete({ id: id });
   }
 }

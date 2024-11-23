@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Answer } from 'src/answers/entities/answer.entity';
 import { Question } from 'src/questions/entities/question.entity';
 import {
@@ -18,7 +19,8 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ select: false })
+  // @Exclude({ toPlainOnly: true })
   password: string;
 
   @Column({ nullable: true })

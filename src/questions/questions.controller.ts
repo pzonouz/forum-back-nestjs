@@ -43,13 +43,14 @@ export class QuestionsController {
   update(
     @Param('id') id: string,
     @Body() updateQuestionDto: UpdateQuestionDto,
+    @Request() req: any,
   ) {
-    return this.questionsService.update(id, updateQuestionDto);
+    return this.questionsService.update(id, updateQuestionDto, req.user);
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.questionsService.remove(id);
+  remove(@Param('id') id: string, @Request() req: any) {
+    return this.questionsService.remove(id, req.user);
   }
 }
