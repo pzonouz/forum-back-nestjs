@@ -8,19 +8,16 @@ export class CreateUserDto {
     /(?=(.*[0-9]))(?=.*[\!@#$%^&*()\\[\]{}\-_+=~`|:;"'<>,./?])(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}/,
     {
       message:
-        'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character',
+        'حداقل یک حرف کوچک، یک حرف بزرگ، یک عدد و یک کاراکتر خاص، حداقل 8 کاراکتر',
     },
   )
   password: string;
 
   @IsOptional()
-  password_confirm: string;
+  @IsString()
+  firstname: string;
 
   @IsOptional()
   @IsString()
-  firstName: string;
-
-  @IsOptional()
-  @IsString()
-  lastName: string;
+  lastname: string;
 }

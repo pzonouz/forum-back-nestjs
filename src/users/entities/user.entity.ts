@@ -20,14 +20,16 @@ export class User {
   email: string;
 
   @Column({ select: false })
-  // @Exclude({ toPlainOnly: true })
   password: string;
 
   @Column({ nullable: true })
-  firstName: string;
+  firstname: string;
 
   @Column({ nullable: true })
-  lastName: string;
+  lastname: string;
+
+  @Column({ default: false })
+  social: boolean;
 
   @OneToMany(() => Question, (question) => question.user)
   questions: Question[];
@@ -36,8 +38,8 @@ export class User {
   answers: Answer[];
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }

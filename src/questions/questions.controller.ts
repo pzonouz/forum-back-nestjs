@@ -8,11 +8,13 @@ import {
   Delete,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { AuthGuard } from 'src/auth/guards/auth-guard';
+import { QueryQuestionDto } from './dto/query-question.dto';
 
 @Controller('questions')
 export class QuestionsController {
@@ -29,8 +31,8 @@ export class QuestionsController {
   }
 
   @Get()
-  findAll() {
-    return this.questionsService.findAll();
+  findAll(@Query() query: QueryQuestionDto) {
+    return this.questionsService.findAll(query);
   }
 
   @Get(':id')

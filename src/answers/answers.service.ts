@@ -6,7 +6,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Answer } from './entities/answer.entity';
 import { UsersService } from 'src/users/users.service';
-import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
@@ -40,13 +39,14 @@ export class AnswersService {
     return this.answerRespository.find({
       where: { question: { id: id } },
       relations: { user: true, question: { user: true } },
+      order: { created_at: 'ASC' },
     });
   }
 
   findOneById(id: string) {
     return this.answerRespository.findOne({
       where: { id: id },
-      relations: { question: { user: true } },
+      relations: { user: true, question: { user: true } },
     });
   }
 
@@ -62,8 +62,18 @@ export class AnswersService {
     if (!answer) {
       throw new HttpException('Answer does not exists', 404);
     }
-    if (answer.question.user?.id !== requestUser?.id) {
+    if (answer.user?.id !== requestUser?.id) {
       throw new HttpException('Only Owener can edit answer', 401);
+    }
+    return await this.answerRespository.update(id, updateAnswerDto);
+  }
+  async updateWithoutAuth(id: string, updateAnswerDto: UpdateAnswerDto) {
+    const answer = await this.answerRespository.findOne({
+      where: { id: id },
+      relations: { user: true, question: { user: true } },
+    });
+    if (!answer) {
+      throw new HttpException('Answer does not exists', 404);
     }
     return await this.answerRespository.update(id, updateAnswerDto);
   }
@@ -71,12 +81,20 @@ export class AnswersService {
   async remove(id: string, requestUser: User) {
     const answer = await this.answerRespository.findOne({
       where: { id: id },
+      relations: { user: true },
     });
     if (!answer) {
       throw new HttpException('Answer does not exists', 404);
     }
     if (answer.user.id !== requestUser.id) {
       throw new HttpException('Only Owener can edit answer', 401);
+    }
+    if (answer.solving) {
+      const res = await this.questionService.update(
+        answer?.question?.id,
+        { solved: false },
+        requestUser,
+      );
     }
 
     return this.answerRespository.delete(id);

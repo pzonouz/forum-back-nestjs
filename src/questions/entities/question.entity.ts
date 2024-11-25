@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -25,6 +26,10 @@ export class Question {
   @Column({ default: false })
   solved: boolean;
 
+  @Index('tsv_idx', ['tsverctor'], { fulltext: true })
+  @Column({ type: 'tsvector', nullable: true })
+  tsv_column: string;
+
   @ManyToOne(() => User, (user) => user.questions)
   @JoinColumn()
   user: User;
@@ -33,8 +38,8 @@ export class Question {
   answers: Answer[];
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 }

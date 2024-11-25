@@ -59,12 +59,19 @@ export class AnswersController {
     if (answer?.question?.user?.id !== req?.user?.id) {
       throw new HttpException('Only Owner can solve answer', 401);
     }
-    await this.questionService.update(
+    const allAnswers = await this.answersService.findAllByQuestionId(
       answer?.question?.id,
-      { solved: true },
-      req.user,
     );
-    return await this.answersService.update(id, { solving: true }, req.user);
+    const otherAnswerIsSolving = allAnswers.filter(
+      (a) => a.id != answer?.id && a?.solving,
+    );
+    if (otherAnswerIsSolving.length > 0) {
+      throw new HttpException('Only one answer can be solved at a time', 400);
+    }
+    const res = await this.answersService.updateWithoutAuth(id, {
+      solving: !answer?.solving,
+    });
+    return this.questionService.checkQuestionSolved(answer?.question?.id);
   }
 
   @UseGuards(AuthGuard)
@@ -83,7 +90,9 @@ export class AnswersController {
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string, @Request() req: any) {
-    return this.answersService.remove(id, req.user);
+  async remove(@Param('id') id: string, @Request() req: any) {
+    await this.answersService.remove(id, req.user);
+    const question = await this.questionService.findOneById(id);
+    return this.questionService.checkQuestionSolved(question?.id);
   }
 }

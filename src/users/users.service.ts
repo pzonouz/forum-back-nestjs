@@ -14,7 +14,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     const exisingUser = await this.findOneEmail(createUserDto.email);
     if (exisingUser) {
-      throw new HttpException('user already exists', 400);
+      throw new HttpException('این ایمیل قبلا ثبت شده', 400);
     }
     return this.userRepository.save(createUserDto);
   }
@@ -29,12 +29,15 @@ export class UsersService {
   findOneEmail(email: string) {
     return this.userRepository.findOne({
       where: { email: email },
-      select: ['id', 'email', 'password', 'firstName', 'lastName'],
+      select: ['id', 'email', 'password', 'firstname', 'lastname'],
     });
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const existingUser = await this.findOneById(id);
+    if (existingUser) {
+      return this.userRepository.update(id, updateUserDto);
+    }
   }
 
   remove(id: string) {

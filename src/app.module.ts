@@ -1,9 +1,4 @@
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -15,6 +10,7 @@ import { CoreModule } from './core/core.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { ToLowerCaseMiddleware } from './middlewares/toLowerCase.middleware';
 import { AnswersModule } from './answers/answers.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -36,6 +32,7 @@ import { AnswersModule } from './answers/answers.module';
     CoreModule,
     QuestionsModule,
     AnswersModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
