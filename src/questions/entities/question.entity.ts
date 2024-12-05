@@ -1,10 +1,12 @@
 import { Answer } from 'src/answers/entities/answer.entity';
+import { File } from 'src/files/entities/file.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -26,8 +28,14 @@ export class Question {
   @Column({ default: false })
   solved: boolean;
 
-  @Index('tsv_idx', ['tsverctor'], { fulltext: true })
-  @Column({ type: 'tsvector', nullable: true })
+  @Column('text', { array: true, nullable: true })
+  filenames: string[];
+
+  @Column({
+    type: 'tsvector',
+    generatedType: 'STORED',
+    asExpression: "to_tsvector('english', title || ' ' || description)",
+  })
   tsv_column: string;
 
   @ManyToOne(() => User, (user) => user.questions)

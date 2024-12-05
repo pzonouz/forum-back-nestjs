@@ -1,4 +1,4 @@
-import { HttpException, Injectable, UseGuards } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateAnswerDto } from './dto/create-answer.dto';
 import { UpdateAnswerDto } from './dto/update-answer.dto';
 import { QuestionsService } from 'src/questions/questions.service';

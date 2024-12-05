@@ -68,7 +68,7 @@ export class AnswersController {
     if (otherAnswerIsSolving.length > 0) {
       throw new HttpException('Only one answer can be solved at a time', 400);
     }
-    const res = await this.answersService.updateWithoutAuth(id, {
+    await this.answersService.updateWithoutAuth(id, {
       solving: !answer?.solving,
     });
     return this.questionService.checkQuestionSolved(answer?.question?.id);

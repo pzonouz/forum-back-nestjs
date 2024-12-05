@@ -1,10 +1,12 @@
 import { Exclude } from 'class-transformer';
 import { Answer } from 'src/answers/entities/answer.entity';
+import { File } from 'src/files/entities/file.entity';
 import { Question } from 'src/questions/entities/question.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -29,12 +31,28 @@ export class User {
   lastname: string;
 
   @Column({ default: false })
+  is_admin: boolean;
+
+  @Column({ default: false })
   social: boolean;
 
-  @OneToMany(() => Question, (question) => question.user)
+  @OneToMany(() => File, (file) => file.user, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
+  @JoinTable()
+  files: File[];
+
+  @OneToMany(() => Question, (question) => question.user, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   questions: Question[];
 
-  @ManyToOne(() => Answer, (answer) => answer.user)
+  @ManyToOne(() => Answer, (answer) => answer.user, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   answers: Answer[];
 
   @CreateDateColumn()

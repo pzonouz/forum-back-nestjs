@@ -21,13 +21,17 @@ export class QuestionsService {
     if (!user) {
       throw new HttpException('User not found', 400);
     }
-    const question = await this.questionsRepository.findOne({
+    const existingquestion = await this.questionsRepository.findOne({
       where: { title: createQuestionDto.title },
     });
-    if (question) {
+    if (existingquestion) {
       throw new HttpException('Question already exists', 400);
     }
-    return this.questionsRepository.save({ ...createQuestionDto, user: user });
+    const object = this.questionsRepository.create({
+      ...createQuestionDto,
+      user: user,
+    });
+    return await this.questionsRepository.save(object);
   }
 
   async findAll(query: QueryQuestionDto) {
@@ -86,7 +90,6 @@ export class QuestionsService {
         take: query.limit,
       });
     } catch (e) {
-      console.log(e);
       return await this.questionsRepository.find({
         relations: { answers: true, user: true },
         order: { created_at: query.sort_order || 'DESC' },

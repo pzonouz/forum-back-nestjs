@@ -1,4 +1,4 @@
-import { IsOptional, IsString, MinLength } from 'class-validator';
+import { IsArray, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateQuestionDto {
   @IsOptional()
@@ -13,6 +13,10 @@ export class CreateQuestionDto {
 
   @IsOptional()
   solved: boolean;
+
+  @IsOptional()
+  @IsArray()
+  filenames: string[];
 
   userId: string;
 }

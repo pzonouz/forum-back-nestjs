@@ -26,6 +26,7 @@ export class QuestionsController {
     @Body() createQuestionDto: CreateQuestionDto,
     @Request() req: any,
   ) {
+    console.log(createQuestionDto);
     createQuestionDto.userId = req?.user?.id;
     return this.questionsService.create(createQuestionDto);
   }

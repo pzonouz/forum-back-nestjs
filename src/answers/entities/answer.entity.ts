@@ -1,3 +1,4 @@
+import { File } from 'src/files/entities/file.entity';
 import { Question } from 'src/questions/entities/question.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
@@ -6,6 +7,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -20,6 +22,13 @@ export class Answer {
 
   @Column({ default: false })
   solving: boolean;
+
+  @Column({
+    type: 'tsvector',
+    generatedType: 'STORED',
+    asExpression: "to_tsvector('english', description)",
+  })
+  tsv_column: string;
 
   @ManyToOne(() => User, (user) => user.answers)
   @JoinColumn()

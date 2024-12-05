@@ -11,6 +11,9 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { ToLowerCaseMiddleware } from './middlewares/toLowerCase.middleware';
 import { AnswersModule } from './answers/answers.module';
 import { SearchModule } from './search/search.module';
+import { FilesModule } from './files/files.module';
+import { UploadsModule } from './uploads/uploads.module';
+import { DownloadsModule } from './downloads/downloads.module';
 
 @Module({
   imports: [
@@ -33,6 +36,9 @@ import { SearchModule } from './search/search.module';
     QuestionsModule,
     AnswersModule,
     SearchModule,
+    FilesModule,
+    UploadsModule,
+    DownloadsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
