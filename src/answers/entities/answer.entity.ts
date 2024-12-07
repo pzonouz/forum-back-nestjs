@@ -23,6 +23,9 @@ export class Answer {
   @Column({ default: false })
   solving: boolean;
 
+  @Column('text', { array: true, nullable: true })
+  filenames: string[];
+
   @Column({
     type: 'tsvector',
     generatedType: 'STORED',

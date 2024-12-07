@@ -125,7 +125,12 @@ export class QuestionsService {
     if (question.user?.id !== requestUser?.id) {
       throw new HttpException('Only Owener can edit question', 401);
     }
-
+    const existingquestion = await this.questionsRepository.findOne({
+      where: { title: updateQuestionDto.title },
+    });
+    if (existingquestion) {
+      throw new HttpException('Question already exists', 400);
+    }
     return this.questionsRepository.update(
       { id: id },
       { ...updateQuestionDto },
