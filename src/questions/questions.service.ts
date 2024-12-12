@@ -123,12 +123,12 @@ export class QuestionsService {
       throw new HttpException('Question does not exists', 404);
     }
     if (question.user?.id !== requestUser?.id) {
-      throw new HttpException('Only Owener can edit question', 401);
+      throw new HttpException('Only Owner can edit question', 401);
     }
     const existingquestion = await this.questionsRepository.findOne({
       where: { title: updateQuestionDto.title },
     });
-    if (existingquestion) {
+    if (existingquestion.id != question.id) {
       throw new HttpException('Question already exists', 400);
     }
     return this.questionsRepository.update(

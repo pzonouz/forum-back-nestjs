@@ -36,6 +36,14 @@ export class User {
   @Column({ default: false })
   social: boolean;
 
+  @Column({ nullable: true })
+  @Exclude()
+  reset_password_token: string;
+
+  @Column({ nullable: true })
+  @Exclude()
+  reset_password_token_expires: Date;
+
   @OneToMany(() => File, (file) => file.user, {
     onDelete: 'SET NULL',
     nullable: true,

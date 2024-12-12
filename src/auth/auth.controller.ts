@@ -13,6 +13,8 @@ import { SocialSigninDto } from './dto/social-signin-auth.dto';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ResetPasswordCallbackDto } from './dto/reset-password-callback.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -25,6 +27,16 @@ export class AuthController {
   @Post('signin')
   async signin(@Request() req: any) {
     return this.authService.signin(req.user);
+  }
+  @Post('reset_Password')
+  reset_password(@Body() resetPasswordDto: ResetPasswordDto) {
+    return this.userService.resetPassword(resetPasswordDto);
+  }
+  @Post('reset_Password_callback')
+  async reset_password_callback(
+    @Body() ResetPasswordCallbackDto: ResetPasswordCallbackDto,
+  ) {
+    return this.userService.resetPasswordCallback(ResetPasswordCallbackDto);
   }
   @Post('social_signin')
   async socialSignin(@Body() socialSigninDto: SocialSigninDto) {

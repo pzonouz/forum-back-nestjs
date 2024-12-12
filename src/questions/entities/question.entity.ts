@@ -1,9 +1,6 @@
 import { Answer } from 'src/answers/entities/answer.entity';
-import { File } from 'src/files/entities/file.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
-  BeforeInsert,
-  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -22,7 +19,9 @@ export class Question {
   @Column({ unique: true })
   title: string;
 
-  @Column()
+  @Column({
+    type: 'text',
+  })
   description: string;
 
   @Column({ default: false })

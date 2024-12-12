@@ -1,5 +1,3 @@
-import { Answer } from 'src/answers/entities/answer.entity';
-import { Question } from 'src/questions/entities/question.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -18,7 +16,7 @@ export class File {
   @Column()
   filename: string;
 
-  @Column({ default: '' })
+  @Column({ default: '', unique: true })
   title: string;
 
   @ManyToOne(() => User, (user) => user.files)

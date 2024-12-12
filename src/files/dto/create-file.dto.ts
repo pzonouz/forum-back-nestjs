@@ -1,5 +1,4 @@
 import { IsOptional, IsString } from 'class-validator';
-import { User } from 'src/users/entities/user.entity';
 
 export class CreateFileDto {
   @IsString()
@@ -8,6 +7,4 @@ export class CreateFileDto {
   @IsString()
   @IsOptional()
   title: string;
-
-  user: User;
 }

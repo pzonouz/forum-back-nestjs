@@ -14,11 +14,12 @@ import { SearchModule } from './search/search.module';
 import { FilesModule } from './files/files.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { DownloadsModule } from './downloads/downloads.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
-    AuthModule,
     ConfigModule.forRoot(),
+    AuthModule,
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         type: 'postgres',
@@ -39,6 +40,7 @@ import { DownloadsModule } from './downloads/downloads.module';
     FilesModule,
     UploadsModule,
     DownloadsModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
