@@ -22,6 +22,13 @@ export class File {
   @ManyToOne(() => User, (user) => user.files)
   user: User;
 
+  @Column({
+    type: 'tsvector',
+    generatedType: 'STORED',
+    asExpression: "to_tsvector('english', title)",
+  })
+  tsv_column: string;
+
   @CreateDateColumn()
   created_at: Date;
 

@@ -65,7 +65,9 @@ export class UsersService {
       throw new HttpException('این ایمیل وجود ندارد', 404);
     }
     user.reset_password_token = randomUUID().toString();
-    user.reset_password_token_expires = new Date(Date.now() + 60 * 60 * 24);
+    user.reset_password_token_expires = new Date(
+      Date.now() + 60 * 1000 * 60 * 24,
+    );
     await this.mailService.sendMail(
       resetPassword.email,
       'بازیابی رمز عبور',

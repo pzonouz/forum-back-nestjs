@@ -1,6 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Answer } from 'src/answers/entities/answer.entity';
+import { File } from 'src/files/entities/file.entity';
 import { Question } from 'src/questions/entities/question.entity';
 import { Repository } from 'typeorm';
 
@@ -11,6 +12,8 @@ export class SearchController {
     private readonly questionsRepository: Repository<Question>,
     @InjectRepository(Answer)
     private readonly answersRepository: Repository<Answer>,
+    @InjectRepository(File)
+    private readonly filesRepository: Repository<File>,
   ) {}
   @Get()
   async search(@Query('query') query: string) {
@@ -33,5 +36,19 @@ export class SearchController {
     const res = await Promise.all([questionSearch, answerSearch]);
 
     return { questions: [...res[0]], answers: [...res[1]] };
+  }
+  @Get('/files')
+  async searchfile(@Query('query') query: string) {
+    const queryString = `${query}:*`;
+    const fileSearch = this.filesRepository
+      .createQueryBuilder('file')
+      .where('file.tsv_column @@ to_tsquery(:query)', {
+        query: queryString,
+      })
+      .orderBy('ts_rank_cd(file.tsv_column, to_tsquery(:query))', 'DESC')
+      .getMany();
+    const res = await fileSearch;
+
+    return res;
   }
 }

@@ -15,6 +15,7 @@ import { FilesModule } from './files/files.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { DownloadsModule } from './downloads/downloads.module';
 import { MailModule } from './mail/mail.module';
+import { ImportModule } from './import/import.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { MailModule } from './mail/mail.module';
     UploadsModule,
     DownloadsModule,
     MailModule,
+    ImportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

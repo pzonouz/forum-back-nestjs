@@ -30,6 +30,9 @@ export class User {
   @Column({ nullable: true })
   lastname: string;
 
+  @Column({ nullable: true })
+  address: string;
+
   @Column({ default: false })
   is_admin: boolean;
 
@@ -48,18 +51,29 @@ export class User {
     onDelete: 'SET NULL',
     nullable: true,
   })
-  @JoinTable()
+  @JoinTable({
+    name: 'useremail',
+    joinColumn: { referencedColumnName: 'email' },
+  })
   files: File[];
 
   @OneToMany(() => Question, (question) => question.user, {
     onDelete: 'SET NULL',
     nullable: true,
   })
+  @JoinTable({
+    name: 'useremail',
+    joinColumn: { referencedColumnName: 'email' },
+  })
   questions: Question[];
 
-  @ManyToOne(() => Answer, (answer) => answer.user, {
+  @OneToMany(() => Answer, (answer) => answer.user, {
     onDelete: 'SET NULL',
     nullable: true,
+  })
+  @JoinTable({
+    name: 'useremail',
+    joinColumn: { referencedColumnName: 'email' },
   })
   answers: Answer[];
 

@@ -10,7 +10,6 @@ import { UploadsService } from './uploads.service';
       storage: diskStorage({
         destination: './upload',
         filename: (req, file, callback) => {
-          console.log(file);
           let ext = '';
           switch (file.mimetype) {
             case 'application/pdf':
